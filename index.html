@@ -5,21 +5,20 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
-    <a-scene 
-      mindar-image="imageTargetSrc: targets.mind" 
-      color-space="sRGB" 
-      renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" 
+    <a-scene
+      mindar-image="imageTargetSrc: targets.mind"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <video 
-          id="blockVideo" 
-          src="block_vid.mp4" 
-          preload="auto" 
-          autoplay 
-          loop 
-          muted 
+        <video
+          id="blockVideo"
+          src="block_vid.mp4"
+          preload="auto"
+          loop
+          muted
           playsinline
           crossorigin="anonymous"
         ></video>
@@ -28,14 +27,36 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video 
-          src="#blockVideo" 
-          width="1" 
-          height="0.552" 
-          position="0 0 0" 
+        <a-video
+          id="videoPlane"
+          src="#blockVideo"
+          width="1"
+          height="0.552"
+          position="0 0 0"
           rotation="0 0 0"
         ></a-video>
       </a-entity>
     </a-scene>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const video = document.querySelector("#blockVideo");
+
+        // Try to play once the scene has started
+        document.querySelector("a-scene").addEventListener("loaded", () => {
+          video.play().catch((e) => {
+            console.warn("Autoplay prevented, will try to resume on gesture");
+          });
+        });
+
+        // Fallback: play video when user taps the screen (for iOS)
+        document.body.addEventListener("click", () => {
+          if (video.paused) {
+            video.play();
+          }
+        });
+      });
+    </script>
   </body>
 </html>
+
