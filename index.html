@@ -26,29 +26,53 @@
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
+      <!-- First detected instance of the target -->
       <a-entity mindar-image-target="targetIndex: 0; smooth: true; smoothCount: 5; smoothTolerance: 0.01;">
         <a-video
-          id="videoPlane"
+          class="videoPlane"
           src="#blockVideo"
           width="1"
           position="0 0 0"
           rotation="0 0 0"
         ></a-video>
       </a-entity>
+
+      <!-- Second detected instance of the same target -->
+      <a-entity mindar-image-target="targetIndex: 0; smooth: true; smoothCount: 5; smoothTolerance: 0.01;">
+        <a-video
+          class="videoPlane"
+          src="#blockVideo"
+          width="1"
+          position="0 0 0"
+          rotation="0 0 0"
+        ></a-video>
+      </a-entity>
+
+      <!-- Add more if you want more detected posters -->
     </a-scene>
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#blockVideo");
 
-        // Try to play once the scene has started
+        // When video metadata loads, set height dynamically on all video planes
+        video.addEventListener("loadedmetadata", () => {
+          const aspectRatio = video.videoHeight / video.videoWidth;
+          const videoPlanes = document.querySelectorAll(".videoPlane");
+          videoPlanes.forEach((plane) => {
+            const width = parseFloat(plane.getAttribute("width"));
+            plane.setAttribute("height", width * aspectRatio);
+          });
+        });
+
+        // Play video on scene load
         document.querySelector("a-scene").addEventListener("loaded", () => {
-          video.play().catch((e) => {
+          video.play().catch(() => {
             console.warn("Autoplay prevented, will try to resume on gesture");
           });
         });
 
-        // Fallback: play video when user taps the screen (for iOS)
+        // Fallback for iOS tap to play
         document.body.addEventListener("click", () => {
           if (video.paused) {
             video.play();
@@ -58,4 +82,3 @@
     </script>
   </body>
 </html>
-
