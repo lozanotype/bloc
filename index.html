@@ -6,79 +6,73 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: combined.mind; maxTrack: 2"
+      mindar-image="imageTargetSrc: many.mind; maxTrack: 5"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <!-- Clone the video file into two separate DOM elements -->
-        <video
-          id="videoPoster"
-          src="BLOC_Motion.mp4"
-          preload="auto"
-          loop
-          muted
-          playsinline
-          crossorigin="anonymous"
-        ></video>
-
-        <video
-          id="videoPostcard"
-          src="BLOC_Motion.mp4"
-          preload="auto"
-          loop
-          muted
-          playsinline
-          crossorigin="anonymous"
-        ></video>
+        <!-- Create 5 separate video elements that use the same source -->
+        <video id="video0" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
+        <video id="video1" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
+        <video id="video2" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
+        <video id="video3" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
+        <video id="video4" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- Poster (targetIndex 0) -->
+      <!-- Five image targets, same video file, same dimensions -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video
-          src="#videoPoster"
-          width="1"
-          height="1.5"
-          position="0 0 0"
-        ></a-video>
+        <a-video src="#video0" width="1" height="1.45" position="0 0 0"></a-video>
       </a-entity>
 
-      <!-- Postcard (targetIndex 1) -->
       <a-entity mindar-image-target="targetIndex: 1">
-        <a-video
-          src="#videoPostcard"
-          width="1"
-          height="1.4"
-          position="0 0 0"
-        ></a-video>
+        <a-video src="#video1" width="1" height="1.45" position="0 0 0"></a-video>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-video src="#video2" width="1" height="1.45" position="0 0 0"></a-video>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-video src="#video3" width="1" height="1.45" position="0 0 0"></a-video>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-video src="#video4" width="1" height="1.45" position="0 0 0"></a-video>
       </a-entity>
     </a-scene>
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
-        const videoPoster = document.querySelector("#videoPoster");
-        const videoPostcard = document.querySelector("#videoPostcard");
+        const videos = [
+          document.querySelector("#video0"),
+          document.querySelector("#video1"),
+          document.querySelector("#video2"),
+          document.querySelector("#video3"),
+          document.querySelector("#video4"),
+        ];
 
+        // Try to autoplay all videos when the scene loads
         document.querySelector("a-scene").addEventListener("loaded", () => {
-          videoPoster.play().catch(() => {
-            console.warn("Autoplay for poster video blocked.");
-          });
-          videoPostcard.play().catch(() => {
-            console.warn("Autoplay for postcard video blocked.");
+          videos.forEach(video => {
+            video.play().catch(() => {
+              console.warn("Autoplay was blocked for a video.");
+            });
           });
         });
 
-        // iOS fallback: resume both on touch
+        // Fallback for iOS autoplay restrictions
         document.body.addEventListener("click", () => {
-          if (videoPoster.paused) videoPoster.play();
-          if (videoPostcard.paused) videoPostcard.play();
+          videos.forEach(video => {
+            if (video.paused) video.play();
+          });
         });
       });
     </script>
   </body>
 </html>
+
 
