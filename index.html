@@ -13,29 +13,27 @@
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <video id="video" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
+        <video
+          id="video"
+          src="BLOC_Motion.mp4"
+          preload="auto"
+          loop
+          muted
+          playsinline
+          crossorigin="anonymous"
+        ></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- Poster Target (Index 0) -->
+      <!-- Poster target (targetIndex: 0) -->
       <a-entity mindar-image-target="targetIndex: 0">
         <a-video
           src="#video"
           width="1"
-          height="1.5"
+          height="1.4"
           position="0 0 0"
-        ></a-video>
-      </a-entity>
-
-      <!-- Postcard Strip Target (Index 1) -->
-      <a-entity mindar-image-target="targetIndex: 1">
-        <!-- The strip is 0.15 height, we shift video up by (0.15 / 2 + 1.2 / 2) = ~0.675 -->
-        <a-video
-          src="#video"
-          width="1"
-          height="1.15"
-          position="0 0.75 0"
+          rotation="0 0 0"
         ></a-video>
       </a-entity>
     </a-scene>
@@ -45,20 +43,20 @@
         const video = document.querySelector("#video");
 
         document.querySelector("a-scene").addEventListener("loaded", () => {
-          video.play().catch(() => {
-            console.warn("Autoplay blocked.");
+          video.play().catch((e) => {
+            console.warn("Autoplay prevented, waiting for user gesture.");
           });
         });
 
-        // Fallback for iOS autoplay
         document.body.addEventListener("click", () => {
-          if (video.paused) video.play();
+          if (video.paused) {
+            video.play();
+          }
         });
       });
     </script>
   </body>
 </html>
-
 
 
 
