@@ -6,71 +6,64 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: targets.mind; maxTrack: 5"
+      mindar-image="imageTargetSrc: combined-targets.mind; maxTrack: 2"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <video id="video0" src="BLOC_Motion.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="video1" src="BLOC_Motion.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="video2" src="BLOC_Motion.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="video3" src="BLOC_Motion.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="video4" src="BLOC_Motion.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
+        <video
+          id="blockVideo"
+          src="BLOC_Motion.mp4"
+          preload="auto"
+          loop
+          muted
+          playsinline
+          crossorigin="anonymous"
+        ></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- One video plane per image target -->
+      <!-- Original poster -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#video0" width="1" height="1.5" position="0 0 0"></a-video>
+        <a-video
+          src="#blockVideo"
+          width="1"
+          height="1.5"
+          position="0 0 0"
+        ></a-video>
       </a-entity>
 
+      <!-- Postcard variation -->
       <a-entity mindar-image-target="targetIndex: 1">
-        <a-video src="#video1" width="1" height="1.5" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 2">
-        <a-video src="#video2" width="1" height="1.5" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 3">
-        <a-video src="#video3" width="1" height="1.5" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 4">
-        <a-video src="#video4" width="1" height="1.5" position="0 0 0"></a-video>
+        <a-video
+          src="#blockVideo"
+          width="1"
+          height="1.4"
+          position="0 0 0"
+        ></a-video>
       </a-entity>
     </a-scene>
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
-        // Play each video individually
-        const videos = [
-          document.querySelector("#video0"),
-          document.querySelector("#video1"),
-          document.querySelector("#video2"),
-          document.querySelector("#video3"),
-          document.querySelector("#video4")
-        ];
+        const video = document.querySelector("#blockVideo");
 
         document.querySelector("a-scene").addEventListener("loaded", () => {
-          videos.forEach(video => {
-            video.play().catch(e => {
-              console.warn("Autoplay prevented, will try to resume on gesture");
-            });
+          video.play().catch(() => {
+            console.warn("Autoplay prevented, will try to resume on gesture");
           });
         });
 
         document.body.addEventListener("click", () => {
-          videos.forEach(video => {
-            if (video.paused) {
-              video.play();
-            }
-          });
+          if (video.paused) {
+            video.play();
+          }
         });
       });
     </script>
   </body>
 </html>
+
