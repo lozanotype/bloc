@@ -6,34 +6,51 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: many.mind; maxTrack: 1"
+      mindar-image="imageTargetSrc: many.mind"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <video id="video0" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
+        <video id="video" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
+      <!-- Poster Target (Index 0) -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#video0" width="1" height="1.45" position="0 0 0"></a-video>
+        <a-video
+          src="#video"
+          width="1"
+          height="1.45"
+          position="0 0 0"
+        ></a-video>
+      </a-entity>
+
+      <!-- Postcard Strip Target (Index 1) -->
+      <a-entity mindar-image-target="targetIndex: 1">
+        <!-- The strip is 0.15 height, we shift video up by (0.15 / 2 + 1.2 / 2) = ~0.675 -->
+        <a-video
+          src="#video"
+          width="1"
+          height="1.2"
+          position="0 0.675 0"
+        ></a-video>
       </a-entity>
     </a-scene>
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
-        const video = document.querySelector("#video0");
+        const video = document.querySelector("#video");
 
         document.querySelector("a-scene").addEventListener("loaded", () => {
           video.play().catch(() => {
-            console.warn("Autoplay was blocked.");
+            console.warn("Autoplay blocked.");
           });
         });
 
-        // iOS autoplay fallback
+        // Fallback for iOS autoplay
         document.body.addEventListener("click", () => {
           if (video.paused) video.play();
         });
@@ -41,6 +58,7 @@
     </script>
   </body>
 </html>
+
 
 
 
