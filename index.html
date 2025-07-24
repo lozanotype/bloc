@@ -6,73 +6,41 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: many.mind; maxTrack: 5"
+      mindar-image="imageTargetSrc: many.mind; maxTrack: 1"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <!-- Create 5 separate video elements that use the same source -->
         <video id="video0" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
-        <video id="video1" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
-        <video id="video2" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
-        <video id="video3" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
-        <video id="video4" src="BLOC_Motion.mp4" loop muted playsinline preload="auto" crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- Five image targets, same video file, same dimensions -->
       <a-entity mindar-image-target="targetIndex: 0">
         <a-video src="#video0" width="1" height="1.45" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 1">
-        <a-video src="#video1" width="1" height="1.45" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 2">
-        <a-video src="#video2" width="1" height="1.45" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 3">
-        <a-video src="#video3" width="1" height="1.45" position="0 0 0"></a-video>
-      </a-entity>
-
-      <a-entity mindar-image-target="targetIndex: 4">
-        <a-video src="#video4" width="1" height="1.45" position="0 0 0"></a-video>
       </a-entity>
     </a-scene>
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
-        const videos = [
-          document.querySelector("#video0"),
-          document.querySelector("#video1"),
-          document.querySelector("#video2"),
-          document.querySelector("#video3"),
-          document.querySelector("#video4"),
-        ];
+        const video = document.querySelector("#video0");
 
-        // Try to autoplay all videos when the scene loads
         document.querySelector("a-scene").addEventListener("loaded", () => {
-          videos.forEach(video => {
-            video.play().catch(() => {
-              console.warn("Autoplay was blocked for a video.");
-            });
+          video.play().catch(() => {
+            console.warn("Autoplay was blocked.");
           });
         });
 
-        // Fallback for iOS autoplay restrictions
+        // iOS autoplay fallback
         document.body.addEventListener("click", () => {
-          videos.forEach(video => {
-            if (video.paused) video.play();
-          });
+          if (video.paused) video.play();
         });
       });
     </script>
   </body>
 </html>
+
 
 
